@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    pvc: nfs-pvc
+  name: nfs-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: local-storage-class
+  selector:
+    matchLabels:
+      storage: nfs
+
+      # kubectl apply -f nfs_pv.yaml && kubectl apply -f pod_pvc.yaml && kubectl apply -f pod_consumer.yaml
+      # kubectl delete -f nfs_pv.yaml && kubectl delete -f pod_pvc.yaml && kubectl delete -f pod_consumer.yaml

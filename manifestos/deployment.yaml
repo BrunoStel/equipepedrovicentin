@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx-deployment
+  name: nginx-deployment
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: nginx-deployment
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1 #Permite um pod extra durante a atualização
+      maxUnavailable: 2 #Vai atualizar de 2 em 2, pois permite somente 2 indisponíveis
+  template:
+    metadata:
+      labels:
+        app: nginx-deployment
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        resources:
+          limits:
+            cpu: 0.5
+            memory: 256Mi
+          requests:
+             cpu: 0.3
+             memory: 128Mi
+        volumeMounts:
+          - name: deployment-pv
+            mountPath: /host/proc
+            readOnly: true
+      volumes:
+        - name: deployment-pv
+          persistentVolumeClaim:
+            claimName: efs-claim
